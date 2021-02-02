@@ -1,3 +1,4 @@
+import h2d.Bitmap;
 import h2d.Tile;
 
 class Main extends hxd.App {
@@ -7,9 +8,7 @@ class Main extends hxd.App {
 
 	override function init() {
 		var map = new GameMap(500, 500);
-		var g = new h2d.Graphics(s2d);
-		g.beginTileFill(50, 50, 1, 1, map.tile);
-		g.drawRect(50, 50, map.width, map.height);
-		g.endFill();
+		var display = new h2d.Bitmap(map.tile, s2d);
+		display.setPosition(50, 50);
 	}
 }

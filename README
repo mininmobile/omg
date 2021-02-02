@@ -1,0 +1,14 @@
+                             OPEN (world) MAP GEN
+
+omg  allows  you  to generate a map for your open world game. manually tweak the
+generated  map's  roads,  buildings, terrain, etc. to get yourself a great world
+for your players to explore.
+
+[ PLANNED FEATURES ]
+  [ ] generation of a landmass w/ a height map
+  [ ] ui to specify properties (sea level, noise settings, etc.)
+  [ ] ability to select city/growth center(s)
+  [ ] generate dense, urban, suburban, and, rural areas
+  [ ] generate roads between areas
+  [ ] generate buildings between areas
+  ...

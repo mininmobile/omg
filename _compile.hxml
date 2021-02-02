@@ -1,0 +1,6 @@
+# only included in release builds
+--dce full
+
+--hl bin/out.c
+
+--cmd gcc -O3 -o hello -std=c++ -I out out/main.c -lhl [-L/path/to/required/hdll]

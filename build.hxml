@@ -1,0 +1,9 @@
+--class-path src
+--main Main
+--library heaps
+--library hlsdl
+
+# debug build script
+_debug.hxml
+# compile build script
+#_compile.hxml

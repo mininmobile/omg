@@ -1,0 +1,8 @@
+# only included in debug builds
+--dce std
+--debug
+--verbose
+
+--hl bin/out.hl
+
+--cmd hl bin/out.hl

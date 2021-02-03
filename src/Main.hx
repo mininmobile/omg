@@ -8,9 +8,23 @@ class Main extends hxd.App {
 		var game = new Main();
 	}
 
+	var map : GameMap;
+	var window : hxd.Window;
+
 	override function init() {
-		var map = new GameMap(500, 500);
+		window = hxd.Window.getInstance();
+		window.title = "Open Map Gen";
+		window.addEventTarget(onEvent);
+
+		map = new GameMap(500, 500);
 		var display = new h2d.Bitmap(map.tile, s2d);
 		display.setPosition(50, 50);
+	}
+
+	function onEvent(event : hxd.Event) {
+		switch (event.kind) {
+			case EKeyDown: map.generate();
+			case _:
+		}
 	}
 }

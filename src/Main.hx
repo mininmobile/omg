@@ -1,3 +1,5 @@
+import libnoise.generator.Perlin;
+import h3d.scene.Graphics;
 import h2d.Bitmap;
 import h2d.Tile;
 

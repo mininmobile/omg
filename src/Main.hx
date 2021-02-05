@@ -1,8 +1,3 @@
-import libnoise.generator.Perlin;
-import h3d.scene.Graphics;
-import h2d.Bitmap;
-import h2d.Tile;
-
 class Main extends hxd.App {
 	static function main() {
 		var game = new Main();
@@ -13,17 +8,23 @@ class Main extends hxd.App {
 
 	override function init() {
 		window = hxd.Window.getInstance();
-		window.title = "Open Map Gen";
 		window.addEventTarget(onEvent);
+		window.title = "Open Map Gen";
+		engine.backgroundColor = 0xFF1c1c1c;
 
 		map = new GameMap(500, 500);
-		var display = new h2d.Bitmap(map.tile, s2d);
-		display.setPosition(50, 50);
+		s2d.addChild(map.bitmap);
+		map.bitmap.setPosition(50, 50);
 	}
 
 	function onEvent(event : hxd.Event) {
 		switch (event.kind) {
-			case EKeyDown: map.generate();
+			case EKeyDown:
+				if (event.keyCode == 65 || event.keyCode == 37) {
+					map.seed--;
+				} else if (event.keyCode == 68 || event.keyCode == 39) {
+					map.seed++;
+				}
 			case _:
 		}
 	}

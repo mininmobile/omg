@@ -2,7 +2,6 @@
 --main Main
 --library heaps
 --library hlsdl
---library libnoise
 
 # debug build script
 _debug.hxml

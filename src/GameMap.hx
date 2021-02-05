@@ -1,54 +1,67 @@
-import hxd.BitmapData;
-import h2d.Bitmap;
+import haxe.io.Bytes;
 import h3d.mat.Texture;
-import libnoise.generator.Perlin;
 
 class GameMap {
 	public var width(default, null): Int;
 	public var height(default, null): Int;
-	var image : hxd.BitmapData;
-	var texture : h3d.mat.Texture;
-	public var tile : h2d.Tile;
+	public var bitmap : h2d.Bitmap;
+	var shader : MapShader;
+	var exportTexture : h3d.mat.Texture;
+	public var exportOut : Bytes;
+	// shader settings
+	public var seed          (default, set) = 1;
+	public var minRadius     (default, set) = 0.0;
+	public var maxRadius     (default, set) = 1.0;
+	public var detail        (default, set) = 50.0;
+	public var noiseScale    (default, set) = 3.0;
+	public var perlinGain    (default, set) = 0.5;
+	public var perlinDivisor (default, set) = 1.0;
+	public var fractalOctaves(default, set) = 4;
+	public var fractalScale  (default, set) = 0.3;
+	// shader settings setters
+	function set_seed(_nv)           return seed           = shader.seed           = _nv;
+	function set_minRadius(_nv)      return minRadius      = shader.minRadius      = _nv;
+	function set_maxRadius(_nv)      return maxRadius      = shader.maxRadius      = _nv;
+	function set_detail(_nv)         return detail         = shader.detail         = _nv;
+	function set_noiseScale(_nv)     return noiseScale     = shader.noiseScale     = _nv;
+	function set_perlinGain(_nv)     return perlinGain     = shader.perlinGain     = _nv;
+	function set_perlinDivisor(_nv)  return perlinDivisor  = shader.perlinDivisor  = _nv;
+	function set_fractalOctaves(_nv) return fractalOctaves = shader.fractalOctaves = _nv;
+	function set_fractalScale(_nv)   return fractalScale   = shader.fractalScale   = _nv;
 
 	public function new(width : Int = 500, height : Int = 500) {
 		this.width = width;
 		this.height = height;
-		// prepare map tile for drawing in ui
-		image = new hxd.BitmapData(width, height);
-		texture = new h3d.mat.Texture(width, height, [ Target, Dynamic ]);
-		tile = h2d.Tile.fromTexture(texture);
-		// generate a map with default properties
-		generate();
-		// update the texture with the new map
-		update();
-	}
-
-	static var calls : Int = 0;
-
-	public function generate() {
-		// create blank object + texture
-		var out = new Texture(width, height, [ Target ]);
-		var bmp = new h2d.Bitmap();
-		bmp.width = width;
-		bmp.height = height;
+		// prepare map texture and bitmapData for export
+		exportTexture = new h3d.mat.Texture(width, height, [ Target ]);
+		// prepare output view
+		bitmap = new h2d.Bitmap();
+		bitmap.width = width;
+		bitmap.height = height;
 		// create shader
-		var shader = new GenShader();
-		shader.seed           = 1;
-		shader.minRadius      = .2;
-		shader.maxRadius      = .8;
-		shader.detail         = 50;
-		shader.noiseScale     = 3;
-		shader.perlinGain     = 0.5;
-		shader.perlinDivisor  = 1;
-		shader.fractalOctaves = 3;
-		shader.fractalScale   = 0.5;
+		shader = new MapShader();
+		shader.seed           = seed;
+		shader.minRadius      = minRadius;
+		shader.maxRadius      = maxRadius;
+		shader.detail         = detail;
+		shader.noiseScale     = noiseScale;
+		shader.perlinGain     = perlinGain;
+		shader.perlinDivisor  = perlinDivisor;
+		shader.fractalOctaves = fractalOctaves;
+		shader.fractalScale   = fractalScale;
 		// assign genshader to it
-		bmp.addShader(shader);
-		// draw output of shader to image
-		bmp.drawTo(texture);
+		bitmap.addShader(shader);
 	}
 
-	public function update() {
-		// texture.uploadBitmap(image);
+	/**
+	 * export the map, returns mapdata
+	 * @return Bytes
+	 */
+	public function export() : Bytes {
+		// draw output of shader to image
+		bitmap.drawTo(exportTexture);
+		// return mapdata
+		exportOut = exportTexture.capturePixels().toPNG();
+		return exportOut;
 	}
 }

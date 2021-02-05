@@ -1,4 +1,4 @@
-class GenShader extends hxsl.Shader {
+class MapShader extends hxsl.Shader {
 	static var SRC = {
 		@:import h3d.shader.Base2d;
 
@@ -70,7 +70,7 @@ class GenShader extends hxsl.Shader {
 			var slice = PI * 2 / sides;
 			var r = fractalNoise(position * noiseScale, fractalOctaves) * (maxRadius - minRadius) + minRadius;
 
-			return step(r, cos(floor(0.5 + angle / slice) * slice - angle) * length(position));
+			return 1 - step(r, cos(floor(0.5 + angle / slice) * slice - angle) * length(position));
 		}
 
 		function fragment() {

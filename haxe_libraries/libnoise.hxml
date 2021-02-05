@@ -1,3 +1,0 @@
-# @install: lix --silent download "gh://github.com/memilian/libnoise#8d5c90923e5945b79505847f430bb43b7ae8d5bb" into libnoise/1.0.1/github/8d5c90923e5945b79505847f430bb43b7ae8d5bb
--cp ${HAXE_LIBCACHE}/libnoise/1.0.1/github/8d5c90923e5945b79505847f430bb43b7ae8d5bb/Sources/
--D libnoise=1.0.1

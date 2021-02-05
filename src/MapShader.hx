@@ -77,7 +77,7 @@ class MapShader extends hxsl.Shader {
 
 		function fragment() {
 			var matte = poly(calculatedUV, minRadius, maxRadius, detail);
-			var height = blob > 0.5 ? 0. : fractalNoise(calculatedUV * heightNScale, heightOctaves, heightFScale);
+			var height = matte > 0.5 ? 0. : fractalNoise(calculatedUV * heightNScale, heightOctaves, heightFScale);
 			output.color = vec4(vec3(height), 1);
 		}
 	}

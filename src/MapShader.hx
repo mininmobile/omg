@@ -5,17 +5,19 @@ class MapShader extends hxsl.Shader {
 		@param var PI : Float = 3.1415926535;
 
 		// map settings
-		@param var seed : Int = 0;
-		@param var minRadius : Float = .2;
-		@param var maxRadius : Float = .8;
-		@param var detail : Float = 50;
+		@param var seed : Int            = 0;
+		@param var minRadius : Float     = .2;
+		@param var maxRadius : Float     = .8;
+		@param var detail : Float        = 50;
+		@param var heightNScale : Float  = 3;
+		@param var heightFScale : Float  = 3;
+		@param var heightOctaves : Int   = 3;
+		@param var coastNScale : Float   = 3;
+		@param var coastFScale : Float   = 3;
+		@param var coastOctaves : Int    = 3;
 		// perlin noise settings
-		@param var noiseScale : Float = 3;
-		@param var perlinGain : Float = 0.5;
+		@param var perlinGain : Float    = 0.5;
 		@param var perlinDivisor : Float = 1;
-		// fractal noise settings
-		@param var fractalOctaves : Int = 3;
-		@param var fractalScale : Float = 0.5;
 
 		function rand(coord : Vec2) : Float {
 			return fract(sin(dot(coord.xy, vec2(12.9898, 78.233)) + seed - 1) * 43758.5453);
@@ -49,16 +51,16 @@ class MapShader extends hxsl.Shader {
 			return (wholemix + perlinGain) / perlinDivisor;
 		}
 
-		function fractalNoise(coord : Vec2, octaves : Int) : Float {
+		function fractalNoise(coord : Vec2, octaves : Int, _scale : Float) : Float {
 			var normalizeFactor = 0.0;
 			var value = 0.0;
-			var scale = fractalScale;
+			var scale = _scale;
 
 			for (i in 0...octaves) {
 				value += perlinNoise(coord) * scale;
 				normalizeFactor += scale;
 				coord *= 2;
-				scale *= fractalScale;
+				scale *= _scale;
 			}
 
 			return value / normalizeFactor;
@@ -68,14 +70,15 @@ class MapShader extends hxsl.Shader {
 			position = position * 2 - 1;
 			var angle = atan(position.x, position.y);
 			var slice = PI * 2 / sides;
-			var r = fractalNoise(position * noiseScale, fractalOctaves) * (maxRadius - minRadius) + minRadius;
+			var r = fractalNoise(position * coastNScale, coastOctaves, coastFScale) * (maxRadius - minRadius) + minRadius;
 
-			return 1 - step(r, cos(floor(0.5 + angle / slice) * slice - angle) * length(position));
+			return step(r, cos(floor(0.5 + angle / slice) * slice - angle) * length(position));
 		}
 
 		function fragment() {
-			var blob = poly(calculatedUV, minRadius, maxRadius, detail);
-			output.color = vec4(vec3(blob), 1);
+			var matte = poly(calculatedUV, minRadius, maxRadius, detail);
+			var height = blob > 0.5 ? 0. : fractalNoise(calculatedUV * heightNScale, heightOctaves, heightFScale);
+			output.color = vec4(vec3(height), 1);
 		}
 	}
 }
